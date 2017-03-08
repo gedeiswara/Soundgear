@@ -1,0 +1,21 @@
+# CephDeployer
+# iswaradrmwn@gmail.com // @gedeiswara
+ # define VDI location
+ OS_DISK = "os-disk.vdi"
+ CEPH_DISK = "ceph-disk.vdi"
+ Vagrant.configure("2") do |config|
+ # define the os version of this box
+ config.vm.box = "ubuntu/xenial64"
+ # define the hostname
+ config.vm.hostname = "CephAIO"
+ # define the networking 
+ config.vm.network :private_network, ip: "192.168.56.10"
+ config.vm.network :public_network 
+ # define the disk
+ vb.customize ['createhd','--filename', HOME_DISK, '--format', 'VDI', '--size', 500000]
+ vb.customize ['createhd','--filename', CEPH_DISK, '--format', 'VDI', '--size', 500000]
+ vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port' 0, '--device', 0, '--type', 'hdd', '--medium' HOME_DISK]
+ vb.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port' 0, '--device', 0, '--type', 'hdd', '--medium' CEPH_DISK]
+ # install the dependency
+ config.vm.provision "shell", path: "script.sh"
+end
